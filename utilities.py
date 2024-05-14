@@ -3,6 +3,7 @@ from pandas.api.types import is_numeric_dtype
 from  sklearn.metrics import mean_absolute_error, mean_squared_error
 from numpy import sqrt
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def train_test_split(df: pd.DataFrame, train_ratio: float) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -17,6 +18,8 @@ def impute_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def load_csv(filename: str) -> pd.DataFrame:
+    if not Path(filename).is_file():
+        raise FileNotFoundError(f'File {filename} does not exist')
     df = pd.read_csv(filename, sep=';')
     return df
 
