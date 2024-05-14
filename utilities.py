@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
-def train_test_split(df: pd.DataFrame, train_ratio: float) -> tuple[pd.DataFrame, pd.DataFrame]:
-    length = len(df)
+def train_test_split(series: pd.Series, train_ratio: float) -> tuple[pd.Series, pd.Series]:
+    length = len(series)
     train_len = int(length * train_ratio)
-    return df[:train_len], df[train_len:]
+    return series[:train_len], series[train_len:]
 
 def impute_data(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
@@ -37,8 +37,8 @@ def data_pipeline(filename: str, target: str, train_ratio: float) -> tuple[pd.Se
     df = load_csv(filename)
     df = preprocess_data(df)
     validate_column(df, target)
-    df_train, df_test = train_test_split(df, train_ratio)
-    y_train, y_test = df_train[target], df_test[target]
+    series = df[target]
+    y_train, y_test = train_test_split(series, train_ratio)
     return y_train, y_test
 
 def calculate_metrics(y_true: pd.Series, y_pred: pd.Series) -> dict[str, float]:

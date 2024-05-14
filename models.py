@@ -43,3 +43,14 @@ class AutoRegression(ModelBase):
             model = model.append([y_true_single], refit=False)
         y_pred = pd.Series(y_pred, index=y_test_index)
         return y_pred
+
+
+class RNN(ModelBase):
+    def __init__(self, y_train: pd.Series, y_test: pd.Series) -> None:
+        super().__init__(y_train, y_test)
+        self._batch_size = 32
+        self._window_len = 1
+        self._rnn_size = 96
+        
+    def run(self):
+        pass
