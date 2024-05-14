@@ -26,9 +26,14 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.set_index('Time')
     return df
 
+def validate_column(df: pd.DataFrame, column: str) -> None:
+    if column not in df.columns:
+        raise ValueError(f'Quantity {column} does not exist in dataset, available quantities are: {", ".join(df.columns)}')
+
 def data_pipeline(filename: str, target: str, train_ratio: float) -> tuple[pd.Series, pd.Series]:
     df = load_csv(filename)
     df = preprocess_data(df)
+    validate_column(df, target)
     df_train, df_test = train_test_split(df, train_ratio)
     y_train, y_test = df_train[target], df_test[target]
     return y_train, y_test

@@ -22,6 +22,5 @@ def parse_args(models: list[str]) -> argparse.Namespace:
     parser.add_argument('--plot_train', '-pt', type=bool, default=False, help='Plot training data')
 
     args = parser.parse_args()
-    print(type(args))
     validate_model(args.model, models)
     return args
