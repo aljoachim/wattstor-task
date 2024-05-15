@@ -1,10 +1,11 @@
 from utilities import data_pipeline, calculate_metrics, plot_results, print_metrics
-from models import NaiveForecast, AutoRegression
+from models import NaiveForecast, AutoRegression, RNN
 from parse_args import parse_args
 
 model_map = {
     'naive': NaiveForecast,
-    'autoreg': AutoRegression
+    'autoreg': AutoRegression,
+    'rnn': RNN
 }
 
 train_ratio = 0.8
