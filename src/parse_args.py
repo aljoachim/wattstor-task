@@ -1,6 +1,6 @@
 import argparse
 
-
+# Displays default value in optional arguments
 class OptionalDefaultFormatted(argparse.HelpFormatter):
     def _get_help_string(self, action: argparse.Action) -> str:
         help_str = action.help
@@ -8,11 +8,12 @@ class OptionalDefaultFormatted(argparse.HelpFormatter):
             help_str = help_str + f' (default: {action.default})'
         return help_str
 
-    
+# Check if model name exists
 def validate_model(model: str, allowed_models: list[str]) -> None:
     if model not in allowed_models:
         raise ValueError(f'Model type must be one of: {", ".join(allowed_models)} (case insensitive)')
 
+# Parses and validates input args
 def parse_args(models: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Runs time series forecast', formatter_class=OptionalDefaultFormatted)
     

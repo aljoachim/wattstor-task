@@ -6,34 +6,39 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import os
 
-
+# Split data to train and test
 def train_test_split(series: pd.Series, train_ratio: float) -> tuple[pd.Series, pd.Series]:
     length = len(series)
     train_len = int(length * train_ratio)
     return series[:train_len], series[train_len:]
 
+# Add missing data by interpolation
 def impute_data(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
         if is_numeric_dtype(df[column].dtype):
             df[column] = df[column].interpolate(method='slinear')
     return df
 
+# Load CSV into pandas dataframe
 def load_csv(filename: str) -> pd.DataFrame:
     if not Path(filename).is_file():
         raise FileNotFoundError(f'File {filename} does not exist')
     df = pd.read_csv(filename, sep=';')
     return df
 
+# Convert time from string and set it as an index
 def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df['Time'] = pd.to_datetime(df['Time'], utc=True)
     df = impute_data(df)
     df = df.set_index('Time')
     return df
 
+# Check if column exists
 def validate_column(df: pd.DataFrame, column: str) -> None:
     if column not in df.columns:
         raise ValueError(f'Quantity {column} does not exist in dataset, available quantities are: {", ".join(df.columns)}')
 
+# Whole data preprocessing
 def data_pipeline(filename: str, target: str, train_ratio: float) -> tuple[pd.Series, pd.Series]:
     df = load_csv(filename)
     df = preprocess_data(df)
@@ -42,6 +47,7 @@ def data_pipeline(filename: str, target: str, train_ratio: float) -> tuple[pd.Se
     y_train, y_test = train_test_split(series, train_ratio)
     return y_train, y_test
 
+# Calculate selected metrics
 def calculate_metrics(y_true: pd.Series, y_pred: pd.Series) -> dict[str, float]:
     mae = mean_absolute_error(y_true, y_pred)
     mse = mean_squared_error(y_true, y_pred)
@@ -52,19 +58,22 @@ def calculate_metrics(y_true: pd.Series, y_pred: pd.Series) -> dict[str, float]:
         'rmse': rmse
     }
 
+# Save generated plot to file
 def save_plot_to_file(filepath: str) -> None:
+    dpi = 200 # Setting DPI to 200 for higher quality
     abs_path = os.path.abspath(filepath)
     directory = os.path.dirname(abs_path)
-    if not os.path.exists(directory):
+    if not os.path.exists(directory): # Create directories for output if possible
         try:
             os.makedirs(directory)
         except OSError as e:
             raise Exception(f'Failed to create directories for file {filepath}: {str(e)}')
     try:
-        plt.savefig(filepath, dpi=200, bbox_inches='tight')
+        plt.savefig(filepath, dpi=dpi, bbox_inches='tight')
     except Exception as e:
         raise Exception(f'Failed to save plot to file {filepath}: {str(e)}')
 
+# Generate plot and save it to file
 def plot_results(y_train: pd.Series, y_test: pd.Series, y_pred: pd.Series, target: str, filepath: str, plot_train: bool) -> None:
     plt.figure(figsize=(10, 6))
     if plot_train:
