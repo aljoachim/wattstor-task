@@ -18,7 +18,7 @@ def main() -> None:
     y_pred = model.run()
     metrics = calculate_metrics(y_test, y_pred)
     print_metrics(metrics)
-    plot_results(y_train, y_test, y_pred, args.quantity, args.plot_train)
+    plot_results(y_train, y_test, y_pred, args.quantity, args.output, args.plot_train)
 
 if __name__ == '__main__':
     main()
