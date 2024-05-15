@@ -2,6 +2,7 @@ import pandas as pd
 from statsmodels.tsa.ar_model import AutoReg, ar_select_order
 from utilities import train_test_split
 import tensorflow as tf
+import numpy as np
 
 
 class ModelBase:
@@ -60,17 +61,17 @@ class RNN(ModelBase):
         self._val_ratio = 0.2
         self._y_all = pd.concat([y_train, y_test])
 
-    def _scale_data(self):
+    def _scale_data(self) -> tuple[pd.Series, pd.Series, pd.Series]:
         self._scale_factor = self._y_all.max()
         y_train = self._y_train / self._scale_factor
         y_test = self._y_test / self._scale_factor
         y_all = self._y_all / self._scale_factor
         return y_train, y_test, y_all
     
-    def _scale_back(self, y):
+    def _scale_back(self, y: np.ndarray) -> np.ndarray:
         return y * self._scale_factor
     
-    def _create_dataset(self, y_input, y_targets, shuffle):
+    def _create_dataset(self, y_input: pd.Series, y_targets: pd.Series, shuffle: bool) -> tf.data.Dataset:
         dataset = tf.keras.utils.timeseries_dataset_from_array(
             y_input.to_numpy(),
             targets=y_targets,
@@ -80,7 +81,7 @@ class RNN(ModelBase):
         )
         return dataset
 
-    def _create_datasets(self):
+    def _create_datasets(self) -> tuple[tf.data.Dataset, tf.data.Dataset, tf.data.Dataset]:
         y_train, y_test, y_all = self._scale_data()
         y_train, y_val = train_test_split(y_train, 1 - self._val_ratio)
         y_train = self._create_dataset(y_train, y_train[self._window_len:], True)
@@ -92,7 +93,7 @@ class RNN(ModelBase):
         )
         return y_train, y_val, y_test
     
-    def _create_model(self):
+    def _create_model(self) -> tf.keras.Model:
         model = tf.keras.Sequential([
             tf.keras.layers.Input(shape=(None, 1)),
             tf.keras.layers.SimpleRNN(self._rnn_size),
@@ -100,37 +101,37 @@ class RNN(ModelBase):
         ])
         return model
     
-    def _fit_model(self, model, y_train, y_val):
+    def _fit_model(self, model: tf.keras.Model, y_train: tf.data.Dataset, y_val: tf.data.Dataset) -> tf.keras.Model:
         early_stopping = tf.keras.callbacks.EarlyStopping(
-            monitor='val_mae', 
-            patience=self._early_stopping_patience, 
+            monitor='val_mae',
+            patience=self._early_stopping_patience,
             restore_best_weights=True
         )
         optimizer = tf.keras.optimizers.SGD(
-            learning_rate=self._learning_rate, 
+            learning_rate=self._learning_rate,
             momentum=self._sgd_momentum
         )
         model.compile(
-            loss=tf.keras.losses.Huber(), 
-            optimizer=optimizer, 
+            loss=tf.keras.losses.Huber(),
+            optimizer=optimizer,
             metrics=['mae']
         )
         model.fit(
-            y_train, 
-            validation_data=y_val, 
+            y_train,
+            validation_data=y_val,
             epochs=self._max_epochs,
             callbacks=[early_stopping]
         )
         return model
     
-    def _predict(self, model, y_test):
+    def _predict(self, model: tf.keras.Model, y_test: tf.data.Dataset) -> pd.Series:
         y_pred = model.predict(y_test)
         y_pred = self._scale_back(y_pred)
         y_pred = y_pred.squeeze()
         y_pred = pd.Series(y_pred, index=self._y_test.index)
         return y_pred
 
-    def run(self):
+    def run(self) -> pd.Series:
         if self._is_data_const(): 
             return self._y_test
         y_train, y_val, y_test = self._create_datasets()

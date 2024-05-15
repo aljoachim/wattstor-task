@@ -52,18 +52,18 @@ def calculate_metrics(y_true: pd.Series, y_pred: pd.Series) -> dict[str, float]:
         'rmse': rmse
     }
 
-def save_plot_to_file(filepath):
+def save_plot_to_file(filepath: str) -> None:
     abs_path = os.path.abspath(filepath)
     directory = os.path.dirname(abs_path)
     if not os.path.exists(directory):
         try:
             os.makedirs(directory)
         except OSError as e:
-            raise Exception(f"Failed to create directories for file {filepath}: {str(e)}")
+            raise Exception(f'Failed to create directories for file {filepath}: {str(e)}')
     try:
         plt.savefig(filepath, dpi=200, bbox_inches='tight')
     except Exception as e:
-        raise Exception(f"Failed to save plot to file {filepath}: {str(e)}")
+        raise Exception(f'Failed to save plot to file {filepath}: {str(e)}')
 
 def plot_results(y_train: pd.Series, y_test: pd.Series, y_pred: pd.Series, target: str, filepath: str, plot_train: bool) -> None:
     plt.figure(figsize=(10, 6))
