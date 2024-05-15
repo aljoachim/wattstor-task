@@ -7,6 +7,7 @@ Naive Forecasting, Autoregression, and RNN. You can select one of the methods an
 ## Install requirements
 - Python 3.10 required
 - Installation steps will work on Linux systems
+- Models were trained and tested on CPU, since they dont require that much computational power
 ```
 python -m venv env
 source env/bin/activate
