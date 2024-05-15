@@ -4,7 +4,7 @@ import argparse
 class OptionalDefaultFormatted(argparse.HelpFormatter):
     def _get_help_string(self, action: argparse.Action) -> str:
         help_str = action.help
-        if not action.required:
+        if not action.required and not '--help' in action.option_strings:
             help_str = help_str + f' (default: {action.default})'
         return help_str
 
