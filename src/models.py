@@ -1,6 +1,6 @@
 import pandas as pd
 from statsmodels.tsa.ar_model import AutoReg, ar_select_order
-from utilities import train_test_split
+from .utilities import train_test_split
 import tensorflow as tf
 import numpy as np
 
