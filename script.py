@@ -1,6 +1,6 @@
-from .utilities import data_pipeline, calculate_metrics, plot_results, print_metrics
-from .models import NaiveForecast, AutoRegression, RNN
-from .parse_args import parse_args
+from src.utilities import data_pipeline, calculate_metrics, plot_results, print_metrics
+from src.models import NaiveForecast, AutoRegression, RNN
+from src.parse_args import parse_args
 
 
 model_map = {
