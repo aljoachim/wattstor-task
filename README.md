@@ -1,4 +1,4 @@
-# Task for wattstor - time series forecast
+# Task for Wattstor - time series forecast
 
 ## Description
 This repository contains scripts for time series forecasting. 3 methods are implemented:
