@@ -15,6 +15,8 @@ pip install -r requirements.txt
 
 
 ## Run prediction
+- Usage
+
 ```script.py [-h] --input INPUT --quantity QUANTITY --model MODEL --output OUTPUT [--plot_train PLOT_TRAIN]```
 
 Runs time series forecast
