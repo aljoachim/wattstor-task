@@ -21,7 +21,7 @@ def parse_args(models: list[str]) -> argparse.Namespace:
     parser.add_argument('--quantity', '-q', type=str, required=True, help='Quantity name to predict')
     parser.add_argument('--model', '-m', type=lambda x: str(x).lower(), required=True, help=f'Model type, one of: {", ".join(models)} (case insensitive)')
     parser.add_argument('--output', '-o', type=str, required=True, help='File to save plot to')
-    parser.add_argument('--plot_train', '-pt', type=bool, default=False, help='Plot training data')
+    parser.add_argument('--plot_train', '-pt', action='store_true', default=False, help='Plot training data')
 
     args = parser.parse_args()
     validate_model(args.model, models)

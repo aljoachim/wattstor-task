@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ## Run prediction
 - Usage
 
-```script.py [-h] --input INPUT --quantity QUANTITY --model MODEL --output OUTPUT [--plot_train PLOT_TRAIN]```
+```script.py [-h] --input INPUT --quantity QUANTITY --model MODEL --output OUTPUT [--plot_train]```
 
 Runs time series forecast
 
@@ -32,7 +32,7 @@ Options:
                             Model type, one of: naive, autoreg, rnn (case insensitive)
     --output OUTPUT, -o OUTPUT
                             File to save plot to
-    --plot_train PLOT_TRAIN, -pt PLOT_TRAIN
+    --plot_train, -pt     
                             Plot training data (default: False)
 
 ## Run tests
